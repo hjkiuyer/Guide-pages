@@ -18,10 +18,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
-        self.window.backgroundColor = [UIColor whiteColor];
-    RootViewController *rootVC = [[RootViewController alloc]init];
-    UINavigationController *navig = [[UINavigationController alloc]initWithRootViewController:rootVC];
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = [UIColor whiteColor];
+    RootViewController *rootVC = [[RootViewController alloc] init];
+    UINavigationController *navig = [[UINavigationController alloc] initWithRootViewController:rootVC];
     self.window.rootViewController = navig;
     
     
@@ -31,9 +31,8 @@
     NSArray *imageArray = [NSArray arrayWithObjects:@"navigationPic01",@"navigationPic02",@"navigationPic03",@"navigationPic04",nil];
     //    NSArray *imageArray = [NSArray arrayWithObjects:@"1.jpg",@"2.jpeg",@"3.png",@"4.jpg",nil];
     //创建引导页
-    JDGuideView *guideView = [[JDGuideView alloc]initWithImageArray:imageArray isForFirstOnce:NO hasButton:YES];
+    JDGuideView *guideView = [[JDGuideView alloc] initWithImageArray:imageArray isForFirstOnce:NO hasButton:YES];
     [self.window addSubview:guideView];
-    
     
     
     
@@ -55,7 +54,7 @@
     return YES;
 }
 
-
+//代理方法
 - (void)guideButtonAction:(UIButton *)button{
     NSLog(@"点击就送");
 }

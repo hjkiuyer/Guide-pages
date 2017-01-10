@@ -16,9 +16,9 @@
 
 @interface JDGuideView ()
 
-@property (nonatomic,retain) UIViewController *rootViewController;
-@property (nonatomic,retain) UIPageControl *page;
-@property (nonatomic,retain) NSArray *imageArray;//图片数组
+@property (nonatomic, strong) UIViewController *rootViewController;
+@property (nonatomic, strong) UIPageControl *page;
+@property (nonatomic, strong) NSArray *imageArray;//图片数组
 @property (nonatomic) BOOL isWrite;
 @property (nonatomic) BOOL hasButton;
 
@@ -30,10 +30,10 @@
     self = [super init];
     if (self) {
         self.frame = [UIScreen mainScreen].bounds;
-        //获取根视图
-        AppDelegate *app = [UIApplication sharedApplication].delegate;
-        app.window.backgroundColor = [UIColor whiteColor];
-        self.rootViewController = app.window.rootViewController;
+        //获取窗口
+        UIWindow *window = [[UIApplication sharedApplication].delegate window];
+        window.backgroundColor = [UIColor whiteColor];
+        self.rootViewController = window.rootViewController;
         
         self.rootViewController.view.hidden = YES;
         self.rootViewController.view.alpha = 0;
@@ -48,8 +48,9 @@
     }
     return self;
 }
-
+//构建方法
 + (id)jdGuideWithImageArray:(NSArray *)imageArray isForFirstOnce:(BOOL)once hasButton:(BOOL)btn{
+    
     JDGuideView *guide = [[JDGuideView alloc]initWithImageArray:imageArray isForFirstOnce:once hasButton:btn];
     
     return guide;
@@ -60,7 +61,7 @@
     
     //判断userDefaults存的版本号是否是当前版本号 从而判断是否需要进入引导页
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *version = [userDefaults valueForKey:@"login"];
+    NSString *version = [userDefaults valueForKey:@"GuideVersion"];
     
     NSString *currentVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     if ([version isEqualToString:currentVersion]) {
@@ -73,7 +74,7 @@
 //进入主界面
 - (void)goMain{
     
-    [UIView animateWithDuration:0.8 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         //主界面取消隐藏
         self.rootViewController.view.hidden = NO;
         self.rootViewController.view.alpha = 1;
@@ -115,7 +116,7 @@
     }
     [self addSubview:scrollV];
     //page
-    self.page = [[UIPageControl alloc]initWithFrame:CGRectMake(kScreenWidth/2 - 90/375.0*kScreenWidth, kScreenHeight-30, 180/375.0*kScreenWidth, 20)];
+    self.page = [[UIPageControl alloc] initWithFrame:CGRectMake(kScreenWidth/2 - 90/375.0 * kScreenWidth, kScreenHeight-30, 180/375.0*kScreenWidth, 20)];
     self.page.numberOfPages = self.imageArray.count;
     [self addSubview:self.page];
 }
@@ -136,16 +137,16 @@
 #pragma mark scrollView的代理
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     //当滚动到倒数第二张,开始根据偏移量来控制scrollview的透明度
-    if (scrollView.contentOffset.x > (self.imageArray.count-1)*kScreenWidth) {
+    if (scrollView.contentOffset.x > (self.imageArray.count - 1) * kScreenWidth) {
         //偏移量
-        CGFloat offset = scrollView.contentOffset.x - (self.imageArray.count-1)*kScreenWidth;
+        CGFloat offset = scrollView.contentOffset.x - (self.imageArray.count - 1) * kScreenWidth;
         //渐变效果
         CGFloat alpha = offset/kScreenWidth;
         scrollView.alpha = 1 - alpha;
         
     }
     
-    if (scrollView.contentOffset.x == self.imageArray.count*kScreenWidth) {
+    if (scrollView.contentOffset.x == self.imageArray.count * kScreenWidth) {
         
         [self goMain];//进入主界面
         
@@ -157,7 +158,7 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     //获取当前app版本号
     NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    [userDefaults setObject:version forKey:@"login"];
+    [userDefaults setObject:version forKey:@"GuideVersion"];
 }
 
 //停止减速后切换page值
